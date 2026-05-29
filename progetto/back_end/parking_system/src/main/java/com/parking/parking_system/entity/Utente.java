@@ -1,8 +1,18 @@
 package com.parking.parking_system.entity;
 
+import lombok.Setter;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Entity
 @Table(name="utente")
@@ -40,8 +50,8 @@ public class Utente {
     Le annotazioni di validation non funzionano da sole, servono @Valid o Validator esplicito per attivarle,
     per esempio se voglio attivare le annotazioni di validazione, se passo in un metodo del Controller un oggetto Utente,
     allora lo annoto con @Valid, es. public void salva(@Valid Utente u), in questo modo le annotazioni dell' Entity Utente
-    un altro modo per attivare le annotazioni è annotare il Service con @Validated e annotare @Valid Utente,
-    un altro modo è la validazione manuale tramite un oggetto Validator, non penso di usarla.
+    un altro modo per attivare le annotazioni è annotare il Service con @Validated e validate l'Entity Utente
+    tramite validazione manuale tramite un oggetto Validator, validato.validate(utente)
      */
     @NotBlank
     @Pattern(regexp = "^[A-Z]{6}[0-9]{2}[A-EHLMPRST][0-9]{2}[A-Z][0-9]{3}[A-Z]$")
@@ -60,9 +70,11 @@ public class Utente {
     private String email;
 
     @NotBlank
-    //nella regex della passoword ho messo che deve esserci almeno un numero, almeno un lettera minuscola,
-    //almeno una lettera maiuscola,almeno un simbolo speciale, ed almeno 8 caratteri
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$")
+    //il controllo che la password inserita dall'utente sia corretta lo faccio nel DtoUtenteRequest,
+    //questo pk qui nell'entity non salvo la vera password,ma una criptata tramite encoder
+    //con @JsonProperty permetto alla password di essere scritta nell'entity, ma non permetto
+    //la sua restituzione in output
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password",nullable = false,length = 100)
     private String password;
 
