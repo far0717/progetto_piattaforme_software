@@ -19,12 +19,14 @@ public class UtenteController {
     private final UtenteService service;
 
 
-    @PostMapping("/register")
+
+    @PostMapping("/registra")
     //con @Valid valido i campi del DTO annotati con annotazioni di validazione come:@Email,@Size ...
     //non valido però i campi della Entity Utente,anche senza validazione le annotazioni JPA funzionano sempre
     //come @Entity,@Table,@Column,@Id,@GeneratedValue, se volessi validare le altre notazioni dovrei
     //validarle manualmente nel UtenteService con un oggetto Validate e annotando il Service con @Validated
-    public Utente register(@Valid @RequestBody DtoUtenteRequest request) {
+    public Utente registra(@Valid @RequestBody DtoUtenteRequest request) {
+
         return service.registra(request);
     }
 }

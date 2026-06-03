@@ -2,10 +2,10 @@ package com.parking.parking_system.support.dto;
 //Lombock è una libreria esterna a Spring,ma integrata, che mi permette di evitare di scrivere i metodi getter
 //setter,costruttori a mano, ma li crea lui in fase di eseczione.
 import lombok.Getter;
-import lombok.Setter;
+
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import lombok.Data; //@Data genera getter,setter,toString,equals,hashCode
+//import lombok.Data; //@Data genera getter,setter,toString,equals,hashCode
 
 import jakarta.validation.constraints.*;
 
@@ -18,7 +18,6 @@ Entity per sicurezza,questo avviene solo se valido l'Entity nel Service, altrime
 */
 //@Data
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class DtoUtenteRequest {

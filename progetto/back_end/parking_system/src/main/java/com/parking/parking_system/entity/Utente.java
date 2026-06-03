@@ -25,6 +25,7 @@ public class Utente {
     //nella generazione automatica dell'id, indicando .IDENTITY nella strategia,
     //indico che l'id viene generato automaticamente dal DB
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private Long id;
 
     //l'annotazione @Column non servirebbe in questo caso, pk Spring matcha in automatico
@@ -55,18 +56,20 @@ public class Utente {
      */
     @NotBlank
     @Pattern(regexp = "^[A-Z]{6}[0-9]{2}[A-EHLMPRST][0-9]{2}[A-Z][0-9]{3}[A-Z]$")
-    @Column(name="codice_fiscale",nullable = false,length = 16 )
+    @Column(name="codice_fiscale",nullable = false,length = 16,unique = true)
     private String codiceFiscale;
 
-    @NotEmpty
+    @NotBlank
+    @Size(min=2,max=50) //Estremi inclusi
     @Column(name="nome",nullable = false,length = 50)
     private String nome;
-    @NotEmpty
+    @NotBlank
+    @Size(min=2,max=50)
     @Column(name="cognome",nullable = false,length = 50)
     private String cognome;
     @NotBlank
     @Email//verifica che l'email abbia il formato corretto,ma non che esista
-    @Column(name = "email",nullable = false,length = 100)
+    @Column(name = "email",nullable = false,length = 100,unique = true)
     private String email;
 
     @NotBlank
