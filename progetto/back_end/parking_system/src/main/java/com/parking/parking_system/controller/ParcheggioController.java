@@ -1,8 +1,8 @@
 package com.parking.parking_system.controller;
 
-import com.parking.parking_system.entity.Parcheggio;
+
 import com.parking.parking_system.service.ParcheggioService;
-import jakarta.validation.Valid;
+import com.parking.parking_system.support.dto.DtoParcheggioResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,16 +23,15 @@ public class ParcheggioController {
 
     //prendo tutti i parcheggi esistenti nel DB
     @GetMapping
-    public List<Parcheggio> getAll() {
+    public List<DtoParcheggioResponse> getAll() {
         return service.getAll();
     }
 
-    //getParcheggioById
     @GetMapping("/{id}")
-    public Parcheggio getById(@PathVariable Long id) {
+    public DtoParcheggioResponse getById(@PathVariable Long id) {
         return service.getById(id);
     }
-
+    /*
     @PostMapping
     public Parcheggio creaParcheggio(@Valid @RequestBody Parcheggio parcheggio) {
         return service.creaParcheggio(parcheggio);
@@ -40,19 +39,28 @@ public class ParcheggioController {
 
     @DeleteMapping("/{id}")
     public void eliminaParcheggio(@PathVariable Long id) {
+
         service.eliminaParcheggio(id);
     }
+    //la gestione dei parcheggi la lascio a chi gestisce il DB manualmente
+    */
+
     //quando si fanno modifiche parziali si usa PATCH, fa parte di HTTP,
     //è un metodo di HTTP assieme a POST,PUT,GET,...
     //mettere PUT sarebbe sbagliato perchè implicherebbe che
     // sto sostituendo tutto il parcheggio e non solo un campo.
     @PatchMapping("/{numero}/prenota")
-    public Parcheggio prenotaParcheggio(@PathVariable int numero) {
+    public DtoParcheggioResponse prenotaParcheggio(@PathVariable int numero) {
         return service.prenotaParcheggio(numero);
     }
 
     @PatchMapping("/{numero}/libera")
-    public Parcheggio liberaParcheggio(@PathVariable int numero) {
+    public DtoParcheggioResponse liberaParcheggio(@PathVariable int numero) {
         return service.liberaParcheggio(numero);
+    }
+
+    @GetMapping("/disponibili")
+    public List<DtoParcheggioResponse> getParcheggiDisponibili() {
+        return service.getDisponibili();
     }
 }

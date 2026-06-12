@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,6 +26,9 @@ public class Parcheggio {
 
     @Column(name="disponibile", nullable = false)
     private boolean disponibile;
+
+    @OneToMany(mappedBy = "parcheggio")
+    private List<Prenotazione> prenotazioni;
 
     public void occupaParcheggio() {
         this.disponibile = false; }

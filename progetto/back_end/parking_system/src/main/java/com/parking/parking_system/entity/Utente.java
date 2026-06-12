@@ -9,6 +9,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -83,6 +86,16 @@ public class Utente {
 
     @Column(name = "abbonato",nullable = false)
     private boolean abbonato;
+
+    @OneToMany(mappedBy = "utente", cascade = CascadeType.ALL,orphanRemoval = true)
+    // un utente ha più veicoli, la FK è definita lato Veicolo,
+    //la relazione è definita nel campo utente dentro Veicolo, non dentro l'Entita Utente
+    //CascadeType.ALL indica quando fai operazioni su Utente, applicale anche ai Veicoli
+    //orphanRemoval = true,se un veicolo viene rimosso dalla lista, cancellalo dal DB
+    private List<Veicolo> veicoli = new ArrayList<>();
+
+    @OneToMany(mappedBy = "utente")
+    private List<Prenotazione> prenotazioni;
 
 
 

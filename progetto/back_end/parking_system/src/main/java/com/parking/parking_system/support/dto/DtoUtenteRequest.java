@@ -22,25 +22,31 @@ Entity per sicurezza,questo avviene solo se valido l'Entity nel Service, altrime
 @AllArgsConstructor
 public class DtoUtenteRequest {
 
-    @NotBlank
-    @Pattern(regexp = "^[A-Z]{6}[0-9]{2}[A-EHLMPRST][0-9]{2}[A-Z][0-9]{3}[A-Z]$")
+    /* Il message viene mostrato quando la validazione fallisce,
+    Spring esegue la validazione grazie a @Valid nel controller,
+    se la validazione fallisce allora parte un JSON verso l utente contenente il message
+     */
+    @NotBlank(message = "Il campo codice fiscale è obbligatorio")
+    @Pattern(regexp = "^[A-Z]{6}[0-9]{2}[A-EHLMPRST][0-9]{2}[A-Z][0-9]{3}[A-Z]$",
+    message = "Il codice fiscale deve contenere 16 caratteri nel formato corretto.")
     private String codiceFiscale;
 
-    @NotBlank
+    @NotBlank(message = "Il campo nome è obbligatorio")
     private String nome;
 
-    @NotBlank
+    @NotBlank(message = "Il campo cognome è obbligatorio")
     private String cognome;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "L'email è obbligatoria")
+    @Email(message = "Inserisci un'email valida")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "il campo password è obbligatorio")
     //faccio il controllo tramite regex, che il client inserisca una password che rispetti il formato
     //nella regex della passoword ho messo che deve esserci almeno un numero, almeno un lettera minuscola,
     //almeno una lettera maiuscola,almeno un simbolo speciale, ed almeno 8 caratteri
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$",
+    message = "la password deve essere lunga almeno 8 caratteri,almeno una lettera Maiuscola,almeno una lettera minuscola,almeno una carattere speciale")
     private String password;
 
     private boolean abbonato;
