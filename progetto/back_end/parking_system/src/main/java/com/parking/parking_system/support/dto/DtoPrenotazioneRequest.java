@@ -1,26 +1,21 @@
 package com.parking.parking_system.support.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class DtoPrenotazioneRequest {
+public record DtoPrenotazioneRequest(
+        @NotNull(message = "L'id del veicolo è obbligatorio")
+        Long veicoloId,
 
-    private LocalDate data;
+        @NotNull(message = "L'id del parcheggio è obbligatorio")
+        Long parcheggioId,
 
-    private LocalDateTime orarioInizio;
+        @NotNull(message = "L'orario di inizio è obbligatorio")
+        @FutureOrPresent(message = "L'orario di inizio non può essere nel passato")
+        LocalDateTime orarioInizio,
 
-    private LocalDateTime orarioFine;
-
-    private Long utenteId;
-
-    private Long veicoloId;
-
-    private Long parcheggioId;
-}
+        @NotNull(message = "L'orario di fine è obbligatorio")
+        LocalDateTime orarioFine
+) {}

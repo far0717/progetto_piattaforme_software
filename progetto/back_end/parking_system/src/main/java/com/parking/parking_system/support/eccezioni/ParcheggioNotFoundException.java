@@ -1,10 +1,11 @@
 package com.parking.parking_system.support.eccezioni;
 
-public class ParcheggioNotFoundException extends RuntimeException {
+public class ParcheggioNotFoundException extends RisorsaNonTrovataException {
     public ParcheggioNotFoundException(int numero) {
-        super("Parcheggio numero: " + numero + " ,non trovato");
+        super("Parcheggio numero " + numero + " non trovato");
     }
+
     public ParcheggioNotFoundException(Long id) {
-        super("Parcheggio con id: " + id + " ,non trovato");
+        super("Parcheggio con id " + id + " non trovato");
     }
 }

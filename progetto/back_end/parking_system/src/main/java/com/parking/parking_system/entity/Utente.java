@@ -16,12 +16,13 @@ import java.util.List;
 @Table(name = "utente")
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor//genera costruttore vuoto,JPA richiede un costruttore vuoto per poter creare
+// l’oggetto quando legge una riga dal database.
 public class Utente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;//Si usa Long e non long, perché prima del salvataggio l’id può essere null.
 
 
     //ho deciso di usare keycloak
@@ -53,6 +54,10 @@ public class Utente {
 
     @OneToMany(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Veicolo> veicoli = new ArrayList<>();
+    //cascade = CascadeType.ALL,propaga le operazioni dall’utente ai veicoli,se per esempio elimino
+    //un utente, possono essere eliminati anche i suoi veicoli.
+    //orphanRemoval = true,se un veicolo viene rimosso dalla lista dell’utente,
+    // Hibernate può eliminarlo dal database.
 
     @OneToMany(mappedBy = "utente")
     private List<Prenotazione> prenotazioni = new ArrayList<>();

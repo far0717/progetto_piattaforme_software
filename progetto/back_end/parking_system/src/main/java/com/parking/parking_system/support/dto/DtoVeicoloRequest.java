@@ -1,22 +1,19 @@
 package com.parking.parking_system.support.dto;
 
-
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Size;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class DtoVeicoloRequest {
+public record DtoVeicoloRequest(
+        @NotBlank(message = "La targa è obbligatoria")
+        @Pattern(regexp = "(?i)^[A-Z]{2}[0-9]{3}[A-Z]{2}$", message = "La targa deve essere nel formato AA123AA")
+        String targa,
 
-    @NotBlank(message = "La targa è obbligatoria")
-    @Pattern(regexp = "^[A-Z]{2}[0-9]{3}[A-Z]{2}$",message = "La targa deve essere nel formato AA123AA")
-    private String targa;
+        @NotBlank(message = "La marca è obbligatoria")
+        @Size(max = 50)
+        String marca,
 
-    @NotNull
-    private Long utenteId;
-}
+        @NotBlank(message = "Il modello è obbligatorio")
+        @Size(max = 50)
+        String modello
+) {}
