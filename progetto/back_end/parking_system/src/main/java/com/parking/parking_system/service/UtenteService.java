@@ -1,63 +1,87 @@
 package com.parking.parking_system.service;
 
-import com.parking.parking_system.support.dto.DtoUtenteRequest;
 import com.parking.parking_system.entity.Utente;
 import com.parking.parking_system.repository.UtenteRepository;
+import com.parking.parking_system.support.dto.DtoProfiloUtenteRequest;
+import com.parking.parking_system.support.dto.DtoUtenteResponse;
+import com.parking.parking_system.support.eccezioni.RisorsaDuplicataException;
+import com.parking.parking_system.support.eccezioni.RisorsaNonTrovataException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-//validazione Entity Utente
-import org.springframework.validation.annotation.Validated;
-import jakarta.validation.Validator;
-import jakarta.validation.ConstraintViolation;
-import java.util.Set;
+import java.util.List;
 
-//@Validated
 @Service
-@RequiredArgsConstructor //uso lombok.RequiredArgsConstructor anzichè @Autowired sopra i campi pk
-// con @Autowired non posso mettere gli attributi final, ovvero non posso avere immutabilità
-/*
-Con Lombok posso evitare di scrivere a mano il costruttore, inoltre il Constructor injection che uso con lombok
-è meglio di field injection + @Autowired, perché il costructor injection rende le dipendenze esplicite, immutabili e testabili,
-Se manca una dipendenza, Spring fallisce subito all’avvio.
-Se non usassi Lombok e dovessi scrivere più costruttori,
-poi solo uno di essi può essere usato da Spring per la dependency injection e quello va annotato con @Autowired.
-Invece quando uso il Service nei Controller e gli passo dei parametri, Lombok genera a compile time il costruttore.
-*/
 
+//Tutti i metodi della classe sono di default eseguiti in una transazione di sola lettura
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class UtenteService {
 
     private final UtenteRepository repo;
-    private final PasswordEncoder encoder;
-    //private final Validator validator;
 
+    public List<DtoUtenteResponse> getAll() {
 
-    public Utente registra(DtoUtenteRequest dto) {
+        return repo.findAll().stream().map(this::map).toList();
+    }//getALL()
 
-        if (repo.existsByEmail(dto.getEmail())) {
-            throw new RuntimeException("Email già registrata");
+    public DtoUtenteResponse getById(Long id) {
+        return map(repo.findById(id)
+                .orElseThrow(() -> new RisorsaNonTrovataException("Utente con id " + id + " non trovato")));
+    }//getById
+
+    public DtoUtenteResponse getMyProfile(Jwt jwt) {
+
+        return map(getCurrentUser(jwt));
+    }//getMyProfile()
+
+    public Utente getCurrentUser(Jwt jwt) {
+        return repo.findByKeycloakId(jwt.getSubject())
+                .orElseThrow(() -> new RisorsaNonTrovataException(
+                        "Profilo non completato. Dopo il primo login compila i dati utente."));
+    }//getCurrentUser()
+
+    @Transactional
+    public DtoUtenteResponse createOrUpdateMyProfile(Jwt jwt, DtoProfiloUtenteRequest request) {
+        String keycloakId = jwt.getSubject();
+        String email = getRequiredEmail(jwt);
+        String codiceFiscale = request.codiceFiscale().trim().toUpperCase();
+
+        if (repo.existsByEmailAndKeycloakIdNot(email, keycloakId)) {
+            throw new RisorsaDuplicataException("Email già associata a un altro utente");
+        }
+        if (repo.existsByCodiceFiscaleAndKeycloakIdNot(codiceFiscale, keycloakId)) {
+            throw new RisorsaDuplicataException("Codice fiscale già associato a un altro utente");
         }
 
-        //assegno all'Entity Utente i dati, codifico la password
-        Utente utente = new Utente();
-        utente.setCodiceFiscale(dto.getCodiceFiscale());
-        utente.setNome(dto.getNome());
-        utente.setCognome(dto.getCognome());
-        utente.setEmail(dto.getEmail());
+        Utente utente = repo.findByKeycloakId(keycloakId).orElseGet(Utente::new);
+        utente.setKeycloakId(keycloakId);
+        utente.setEmail(email);
+        utente.setCodiceFiscale(codiceFiscale);
+        utente.setNome(request.nome().trim());
+        utente.setCognome(request.cognome().trim());
 
-        //qui codifico la password
-        utente.setPassword(encoder.encode(dto.getPassword()));
+        return map(repo.save(utente));
+    }
 
-        utente.setAbbonato(dto.isAbbonato());
-        /*per validare l'Entity dovrei fare :
-        Set<ConstraintViolation<Utente>> errors=validator.validate(utente);
-
-        if (!errors.isEmpty()) {
-            throw new RuntimeException(errors.toString());
+    private String getRequiredEmail(Jwt jwt) {
+        String email = jwt.getClaimAsString("email");
+        if (email == null || email.isBlank()) {
+            throw new RisorsaNonTrovataException("Nel token Keycloak manca l'email dell'utente");
         }
-        */
+        return email.trim().toLowerCase();
+    }
 
-        return repo.save(utente);
+    private DtoUtenteResponse map(Utente u) {
+        return new DtoUtenteResponse(
+                u.getId(),
+                u.getKeycloakId(),
+                u.getCodiceFiscale(),
+                u.getNome(),
+                u.getCognome(),
+                u.getEmail()
+        );
     }
 }

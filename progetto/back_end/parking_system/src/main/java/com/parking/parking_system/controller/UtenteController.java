@@ -1,32 +1,48 @@
 package com.parking.parking_system.controller;
 
-import com.parking.parking_system.entity.Utente;
 import com.parking.parking_system.service.UtenteService;
-import com.parking.parking_system.support.dto.DtoUtenteRequest;
+import com.parking.parking_system.support.dto.DtoProfiloUtenteRequest;
+import com.parking.parking_system.support.dto.DtoUtenteResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/utenti")
 @RequiredArgsConstructor
 public class UtenteController {
-    //@AutoWired
-    //Con @AutoWired chiedo a Spring di iniettare un bean(@Component,@Service,ecc.) già gestito dal container IoC,
-    //risolvendo automaticamente la dependency injection. Non devo fare la new.
-    //uso lombok.RequiredArgsConstructor pk mi permette di avere il campo final,
-    // se manca una dipendenza, Spring fallisce subito all’avvio.
+
     private final UtenteService service;
 
+    @GetMapping("/me")
+    public DtoUtenteResponse getMyProfile(@AuthenticationPrincipal Jwt jwt) {
+        return service.getMyProfile(jwt);
+    }
 
+    @PostMapping("/me")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DtoUtenteResponse createOrUpdateMyProfile(
+            @AuthenticationPrincipal Jwt jwt,
+            @Valid @RequestBody DtoProfiloUtenteRequest request
+    ) {
+        return service.createOrUpdateMyProfile(jwt, request);
+    }
 
-    @PostMapping("/registra")
-    //con @Valid valido i campi del DTO annotati con annotazioni di validazione come:@Email,@Size ...
-    //non valido però i campi della Entity Utente,anche senza validazione le annotazioni JPA funzionano sempre
-    //come @Entity,@Table,@Column,@Id,@GeneratedValue, se volessi validare le altre notazioni dovrei
-    //validarle manualmente nel UtenteService con un oggetto Validate e annotando il Service con @Validated
-    public Utente registra(@Valid @RequestBody DtoUtenteRequest request) {
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<DtoUtenteResponse> getAll() {
+        return service.getAll();
+    }
 
-        return service.registra(request);
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public DtoUtenteResponse getById(@PathVariable Long id) {
+        return service.getById(id);
     }
 }
