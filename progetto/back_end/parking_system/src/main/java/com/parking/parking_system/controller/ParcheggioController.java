@@ -1,18 +1,17 @@
 package com.parking.parking_system.controller;
 
-
 import com.parking.parking_system.service.ParcheggioService;
+import com.parking.parking_system.support.dto.DtoParcheggioRequest;
 import com.parking.parking_system.support.dto.DtoParcheggioResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
-
-/*ResponseEntity è la classe che dovrei usare per rendere il controller più preciso,
-pk mi permette di essere preciso anche a livello HTTP,
-senza ResponseEntity Spring restituisce sempre 200(OK) qualunque cosa accada,
-*********AGGIUNGERE RESPONSE ENTITY NEI CONTROLLER********
- */
 
 @RestController
 @RequestMapping("/parcheggi")
@@ -21,46 +20,60 @@ public class ParcheggioController {
 
     private final ParcheggioService service;
 
-    //prendo tutti i parcheggi esistenti nel DB
     @GetMapping
     public List<DtoParcheggioResponse> getAll() {
         return service.getAll();
+    }
+
+    @GetMapping("/disponibili")
+    public List<DtoParcheggioResponse> getParcheggiDisponibili() {
+        return service.getDisponibili();
+    }
+
+    @GetMapping("/disponibilita")
+    public List<DtoParcheggioResponse> getDisponibilitaPerFascia(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime orarioInizio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime orarioFine
+    ) {
+        return service.getDisponibilitaPerFascia(orarioInizio, orarioFine);
     }
 
     @GetMapping("/{id}")
     public DtoParcheggioResponse getById(@PathVariable Long id) {
         return service.getById(id);
     }
-    /*
+
     @PostMapping
-    public Parcheggio creaParcheggio(@Valid @RequestBody Parcheggio parcheggio) {
-        return service.creaParcheggio(parcheggio);
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
+    public DtoParcheggioResponse creaParcheggio(@Valid @RequestBody DtoParcheggioRequest request) {
+        return service.creaParcheggio(request);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public DtoParcheggioResponse aggiornaParcheggio(@PathVariable Long id,
+                                                    @Valid @RequestBody DtoParcheggioRequest request) {
+        return service.aggiornaParcheggio(id, request);
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public void eliminaParcheggio(@PathVariable Long id) {
-
         service.eliminaParcheggio(id);
     }
-    //la gestione dei parcheggi la lascio a chi gestisce il DB manualmente
-    */
 
-    //quando si fanno modifiche parziali si usa PATCH, fa parte di HTTP,
-    //è un metodo di HTTP assieme a POST,PUT,GET,...
-    //mettere PUT sarebbe sbagliato perchè implicherebbe che
-    // sto sostituendo tutto il parcheggio e non solo un campo.
-    @PatchMapping("/{numero}/prenota")
-    public DtoParcheggioResponse prenotaParcheggio(@PathVariable int numero) {
-        return service.prenotaParcheggio(numero);
+
+    @PatchMapping("/{numero}/disabilita")
+    @PreAuthorize("hasRole('ADMIN')")
+    public DtoParcheggioResponse disabilitaParcheggio(@PathVariable int numero) {
+        return service.disabilitaParcheggio(numero);
     }
 
-    @PatchMapping("/{numero}/libera")
-    public DtoParcheggioResponse liberaParcheggio(@PathVariable int numero) {
-        return service.liberaParcheggio(numero);
-    }
-
-    @GetMapping("/disponibili")
-    public List<DtoParcheggioResponse> getParcheggiDisponibili() {
-        return service.getDisponibili();
+    @PatchMapping("/{numero}/abilita")
+    @PreAuthorize("hasRole('ADMIN')")
+    public DtoParcheggioResponse abilitaParcheggio(@PathVariable int numero) {
+        return service.abilitaParcheggio(numero);
     }
 }

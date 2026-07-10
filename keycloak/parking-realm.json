@@ -1,0 +1,91 @@
+{
+  "realm": "parking",
+  "enabled": true,
+  "displayName": "Parking Spot",
+  "registrationAllowed": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "USER",
+        "description": "Utente standard del sistema parcheggi"
+      },
+      {
+        "name": "ADMIN",
+        "description": "Amministratore del sistema parcheggi"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "parking-frontend",
+      "name": "Parking Frontend Angular",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:4200/*",
+        "http://localhost:4300/*",
+        "http://127.0.0.1:4300/*",
+        "http://localhost:14200/*",
+        "http://127.0.0.1:14200/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4200",
+        "http://localhost:4300",
+        "http://127.0.0.1:4300",
+        "http://localhost:14200",
+        "http://127.0.0.1:14200"
+      ],
+      "fullScopeAllowed": true,
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost:14200/*##http://127.0.0.1:14200/*##http://localhost:4300/*##http://127.0.0.1:4300/*"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "user",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "user@parking.local",
+      "firstName": "Mario",
+      "lastName": "Rossi",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "user123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER"
+      ]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "admin@parking.local",
+      "firstName": "Admin",
+      "lastName": "Parking",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER",
+        "ADMIN"
+      ]
+    }
+  ]
+}
