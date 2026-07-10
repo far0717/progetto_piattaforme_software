@@ -1,45 +1,41 @@
 package com.parking.parking_system.entity;
 
 import jakarta.persistence.*;
-
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 
 @Entity
 @Table(name = "veicolo")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Veicolo {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Column(nullable = false, unique = true, length = 20)
     private String targa;
 
-
-    @Column(nullable = false,length = 50)
+    @NotBlank
+    @Column(nullable = false, length = 50)
     private String marca;
 
-
-    @Column(nullable = false,length = 50)
+    @NotBlank
+    @Column(nullable = false, length = 50)
     private String modello;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "utente_id", nullable = false)
-    //il veicolo ha un utente, qui definisco la FK
     private Utente utente;
 
     @OneToMany(mappedBy = "veicolo")
-    private List<Prenotazione> prenotazioni;
+    private List<Prenotazione> prenotazioni = new ArrayList<>();
 }
