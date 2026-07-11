@@ -1,0 +1,14 @@
+<main class="landing-page">
+  <section class="landing-copy">
+    <p class="eyebrow">Smart parking booking</p>
+    <h1>Parking Spot</h1>
+    <p>Applicazione web per la gestione e la prenotazione dei posti auto.</p>
+    <button type="button">da fare</button>
+  </section>
+
+  <section class="parking-puzzle" aria-label="Schermata iniziale del parcheggio">
+    <div class="parking-slot" *ngFor="let numero of numeriParcheggio">
+      <span>{{ numero }}</span>
+    </div>
+  </section>
+</main>

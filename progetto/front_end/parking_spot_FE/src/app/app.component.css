@@ -1,0 +1,49 @@
+:host { display: block; min-height: 100vh; }
+.landing-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(280px, .8fr) minmax(360px, 1.2fr);
+  align-items: center;
+  gap: 2rem;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  background: linear-gradient(135deg, #eef2ff, #dbeafe);
+}
+.landing-copy h1 {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(3rem, 7vw, 6rem);
+}
+.landing-copy p {
+  color: #475569;
+  line-height: 1.6;
+}
+.eyebrow {
+  color: #2563eb !important;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+.parking-puzzle {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: .75rem;
+  padding: 2rem;
+  border-radius: 28px;
+  background: #334155;
+  box-shadow: 0 24px 60px rgba(15,23,42,.22);
+}
+.parking-slot {
+  min-height: 220px;
+  display: grid;
+  place-items: end center;
+  padding: 1rem;
+  border-inline: 4px solid white;
+  color: white;
+  font-size: 2rem;
+  font-weight: 900;
+}
+@media (max-width: 850px) { .landing-page {
+  grid-template-columns: 1fr;
+}
+  .parking-puzzle { grid-template-columns: repeat(3, 1fr); }
+}
