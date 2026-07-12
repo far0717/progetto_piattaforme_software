@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { KeycloakService } from './keycloak.service';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +10,9 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  readonly numeriParcheggio = ['16', '06', '68', '88', '?', '98'];
+  constructor(public readonly keycloak: KeycloakService) {}
+
+  login(): void { this.keycloak.login(); }
+  registrati(): void { this.keycloak.register(); }
+  logout(): void { this.keycloak.logout(); }
 }
