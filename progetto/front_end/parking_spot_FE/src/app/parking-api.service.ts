@@ -1,6 +1,6 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import {
   Parcheggio,
   Prenotazione,
@@ -8,29 +8,23 @@ import {
   ProfiloUtente,
   ProfiloUtenteRequest,
   Veicolo,
-  VeicoloRequest,
-} from "./api.models";
+  VeicoloRequest
+} from './api.models';
 
 // servizio singleton
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class ParkingApiService {
-  private readonly baseUrl = "/api"; //tutti gli endpoint iniziano con /api e grazie al proxy viene inoltrato alla porta 8081
+  private readonly baseUrl = '/api';//tutti gli endpoint iniziano con /api e grazie al proxy viene inoltrato alla porta 8081
   //pk nel target del proxy.conf.json ho messo 8081
 
   constructor(private readonly http: HttpClient) {}
 
-  getDisponibilitaParcheggi(
-    orarioInizio: string,
-    orarioFine: string,
-  ): Observable<Parcheggio[]> {
+  getDisponibilitaParcheggi(orarioInizio: string, orarioFine: string): Observable<Parcheggio[]> {
     const params = new HttpParams()
-      .set("orarioInizio", orarioInizio)
-      .set("orarioFine", orarioFine);
+      .set('orarioInizio', orarioInizio)
+      .set('orarioFine', orarioFine);
 
-    return this.http.get<Parcheggio[]>(
-      `${this.baseUrl}/parcheggi/disponibilita`,
-      { params },
-    );
+    return this.http.get<Parcheggio[]>(`${this.baseUrl}/parcheggi/disponibilita`, { params });
   }
 
   getProfilo(): Observable<ProfiloUtente> {
@@ -58,10 +52,7 @@ export class ParkingApiService {
   }
 
   creaPrenotazione(request: PrenotazioneRequest): Observable<Prenotazione> {
-    return this.http.post<Prenotazione>(
-      `${this.baseUrl}/prenotazioni`,
-      request,
-    );
+    return this.http.post<Prenotazione>(`${this.baseUrl}/prenotazioni`, request);
   }
 
   cancellaPrenotazione(id: number): Observable<void> {
