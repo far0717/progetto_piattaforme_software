@@ -2,83 +2,166 @@
   <div>
     <p class="eyebrow">Smart parking booking</p>
     <h1>Parking Spot</h1>
-    <p>Accedi per gestire il profilo, i veicoli e le prenotazioni.</p>
-    <div class="actions"><button (click)="login()">Login</button><button class="outline" (click)="registrati()">Registrazione</button></div>
+    <p>Prenota il tuo posto auto.</p>
+    <div class="actions">
+      <button (click)="login()">Login</button
+      ><button class="outline" (click)="registrati()">Registrazione</button>
+    </div>
   </div>
   <div class="parking-puzzle">
-      <span>16</span>
-      <span>06</span>
-      <span>68</span>
-      <span>88</span>
-      <button (click)="login()">🚗</button>
-      <span>98</span>
+    <span>16</span><span>06</span><span>68</span><span>88</span
+    ><button (click)="login()">🚗</button><span>98</span>
   </div>
 </section>
-
-<ng-template #dashboard>
-  <header class="dashboard-header">
-      <div>
-          <h1>Parking Spot</h1>
-          <p>{{ keycloak.username() }}</p>
-      </div>
-      <div>
-          <span>{{ keycloak.email() }}</span>
-          <button (click)="logout()">Logout</button>
-      </div>
+<ng-template #dashboard
+  ><header class="dashboard-header">
+    <div>
+      <h1>Parking Spot</h1>
+      <p>{{ keycloak.username() }}</p>
+    </div>
+    <div>
+      <span>{{ keycloak.email() }}</span
+      ><button (click)="logout()">Logout</button>
+    </div>
   </header>
   <nav class="tabs">
-      <button [class.active]="sezioneAttiva === 'prenotazioni'" (click)="cambiaSezione('prenotazioni')">Prenotazioni</button>
-      <button [class.active]="sezioneAttiva === 'profilo'" (click)="cambiaSezione('profilo')">Profilo e veicoli</button>
+    <button
+      [class.active]="sezioneAttiva === 'prenotazioni'"
+      (click)="cambiaSezione('prenotazioni')">
+      Prenotazioni e posti
+    </button>
+      <button
+      [class.active]="sezioneAttiva === 'profilo'"
+      (click)="cambiaSezione('profilo')">
+      Profilo e veicoli
+    </button>
   </nav>
   <main class="container">
-    <p class="success" *ngIf="messaggio">{{ messaggio }}</p><p class="error" *ngIf="errore">{{ errore }}</p>
-    <section class="card" *ngIf="sezioneAttiva === 'prenotazioni'">
-      <h2>Le mie prenotazioni</h2>
-      <p *ngIf="!prenotazioni.length">Nessuna prenotazione presente.</p>
-      <div class="table-shell" *ngIf="prenotazioni.length">
+    <p class="success" *ngIf="messaggio">{{ messaggio }}</p>
+    <p class="error" *ngIf="errore">{{ errore }}</p>
+    <ng-container *ngIf="sezioneAttiva === 'prenotazioni'"
+      ><section class="card">
+        <h2>Scegli la fascia oraria</h2>
+        <div class="form-row">
+          <label
+            >Data<input
+              type="date"
+              [(ngModel)]="slotForm.data"
+              (change)="aggiornaFascia()" /></label
+          ><label
+            >Ora<select
+              [(ngModel)]="slotForm.oraInizio"
+              (change)="aggiornaFascia()"
+            >
+              <option *ngFor="let o of orariDisponibili" [ngValue]="o">
+                {{ o }}
+              </option>
+            </select></label
+          ><label
+            >Durata<select
+              [(ngModel)]="slotForm.durataOre"
+              (change)="aggiornaFascia()"
+            >
+              <option *ngFor="let d of durateDisponibili" [ngValue]="d">
+                {{ d }} {{ d === 1 ? "ora" : "ore" }}
+              </option>
+            </select></label
+          ><label
+            >Veicolo<select [(ngModel)]="prenotazioneForm.veicoloId">
+              <option [ngValue]="0">Seleziona</option>
+              <option *ngFor="let v of veicoli" [ngValue]="v.id">
+                {{ v.targa }} - {{ v.marca }} {{ v.modello }}
+              </option>
+            </select></label
+          >
+        </div>
+        <button
+          [disabled]="caricamentoDisponibilita"
+          (click)="mostraDisponibilita()"
+        >
+          {{ caricamentoDisponibilita ? "Caricamento..." : "Mostra posti" }}
+        </button>
+      </section>
+      <section class="card" *ngIf="fasciaCaricata">
+        <h2>Posti disponibili · {{ riepilogoFascia }}</h2>
+        <div class="parking-grid">
+          <button
+            class="spot"
+            *ngFor="let p of parcheggiOrdinati"
+            [class.free]="p.disponibile"
+            [class.busy]="!p.disponibile"
+            [disabled]="!p.disponibile"
+            (click)="prenota(p)"
+          >
+            <strong>{{ p.numero }}</strong
+            ><span>{{ p.disponibile ? "Libero" : "Occupato" }}</span>
+          </button>
+        </div>
+      </section>
+      <section class="card">
+        <h2>Le mie prenotazioni</h2>
+        <p *ngIf="!prenotazioni.length">Nessuna prenotazione.</p>
+        <div class="table-shell" *ngIf="prenotazioni.length">
           <table>
-              <thead>
+            <thead>
               <tr>
-                  <th>Posto</th>
-                  <th>Veicolo</th>
-                  <th>Inizio</th>
-                  <th>Fine</th>
-                  <th></th>
+                <th>Posto</th>
+                <th>Veicolo</th>
+                <th>Inizio</th>
+                <th>Fine</th>
+                <th></th>
               </tr>
-              </thead>
-              <tbody>
+            </thead>
+            <tbody>
               <tr *ngFor="let p of prenotazioni">
-                  <td>{{ p.numeroParcheggio }}</td>
-                  <td>{{ p.targa }}</td>
-                  <td>{{ p.orarioInizio | date:'short' }}</td>
-                  <td>{{ p.orarioFine | date:'short' }}</td>
-                  <td><button class="danger" (click)="cancellaPrenotazione(p.id)">Cancella</button></td>
+                <td>{{ p.numeroParcheggio }}</td>
+                <td>{{ p.targa }}</td>
+                <td>{{ p.orarioInizio | date:"short" }}</td>
+                <td>{{ p.orarioFine | date: "short" }}</td>
+                <td>
+                  <button class="danger" (click)="cancellaPrenotazione(p.id)">
+                    Cancella
+                  </button>
+                </td>
               </tr>
-              </tbody>
+            </tbody>
           </table>
-      </div>
-    </section>
-    <section class="grid" *ngIf="sezioneAttiva === 'profilo'">
-      <div class="card">
+        </div>
+      </section></ng-container
+    >
+    <ng-container *ngIf="sezioneAttiva === 'profilo'"
+      ><section class="grid">
+        <div class="card">
           <h2>Profilo</h2>
-          <label>Codice fiscale<input [(ngModel)]="profiloForm.codiceFiscale" maxlength="16"></label>
-          <label>Nome<input [(ngModel)]="profiloForm.nome"></label>
-          <label>Cognome<input [(ngModel)]="profiloForm.cognome"></label>
-          <button (click)="salvaProfilo()">Salva profilo</button>
-      </div>
-      <div class="card">
+          <label>
+              Codice fiscale
+              <input
+              [(ngModel)]="profiloForm.codiceFiscale"
+              maxlength="16" />
+          </label
+          ><label>Nome<input [(ngModel)]="profiloForm.nome" /></label
+          ><label>Cognome<input [(ngModel)]="profiloForm.cognome" /></label
+          ><button (click)="salvaProfilo()">Salva profilo</button>
+        </div>
+        <div class="card">
           <h2>Veicoli</h2>
-          <label>Targa<input [(ngModel)]="veicoloForm.targa" maxlength="7"></label>
-          <label>Marca<input [(ngModel)]="veicoloForm.marca"></label>
-          <label>Modello<input [(ngModel)]="veicoloForm.modello"></label>
-          <button [disabled]="!profilo" (click)="creaVeicolo()">Aggiungi veicolo</button>
+          <label
+            >Targa<input [(ngModel)]="veicoloForm.targa" maxlength="7" /></label
+          ><label>Marca<input [(ngModel)]="veicoloForm.marca" /></label
+          ><label>Modello<input [(ngModel)]="veicoloForm.modello" /></label
+          ><button [disabled]="!profilo" (click)="creaVeicolo()">
+            Aggiungi veicolo
+          </button>
           <ul>
-              <li *ngFor="let v of veicoli">
-                  <span>{{ v.targa }} - {{ v.marca }} {{ v.modello }}</span>
-                  <button class="danger" (click)="cancellaVeicolo(v.id)">Elimina</button>
-              </li>
+            <li *ngFor="let v of veicoli">
+              <span>{{ v.targa }} - {{ v.marca }} {{ v.modello }}</span
+              ><button class="danger" (click)="cancellaVeicolo(v.id)">
+                Elimina
+              </button>
+            </li>
           </ul>
-      </div>
-    </section>
-  </main>
-</ng-template>
+        </div>
+      </section></ng-container
+    >
+  </main></ng-template
+>

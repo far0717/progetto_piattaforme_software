@@ -1,195 +1,195 @@
 :host {
-    display: block;
-    min-height: 100vh;
+  display: block;
+  min-height: 100vh;
 }
-
 .landing-page {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    align-items: center;
-    gap: 2rem;
-    padding: 4rem;
-    background: linear-gradient(135deg, #eef2ff, #dbeafe);
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  align-items: center;
+  gap: 2rem;
+  padding: 4rem;
+  background: linear-gradient(135deg, #eef2ff, #dbeafe);
 }
-
 .landing-page h1 {
-    font-size: clamp(3rem, 7vw, 6rem);
-    margin: 0;
+  font-size: clamp(3rem, 7vw, 6rem);
+  margin: 0;
 }
-
 .eyebrow {
-    color: #2563eb;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
+  color: #2563eb;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
-
 .actions {
-    display: flex;
-    gap: 0.7rem;
+  display: flex;
+  gap: 0.7rem;
 }
-
 .outline {
-    background: white;
-    color: #1d4ed8;
+  background: white;
+  color: #1d4ed8;
 }
-
 .parking-puzzle {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 0.7rem;
-    padding: 2rem;
-    border-radius: 28px;
-    background: #334155;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.7rem;
+  padding: 2rem;
+  border-radius: 28px;
+  background: #334155;
 }
-
 .parking-puzzle span,
 .parking-puzzle button {
-    min-height: 210px;
-    display: grid;
-    place-items: end center;
-    border-inline: 4px solid white;
-    background: transparent;
-    color: white;
-    font-size: 2rem;
-    font-weight: 900;
+  min-height: 210px;
+  display: grid;
+  place-items: end center;
+  border-inline: 4px solid white;
+  background: transparent;
+  color: white;
+  font-size: 2rem;
+  font-weight: 900;
 }
-
 .parking-puzzle button {
-    place-items: center;
-    font-size: 4rem;
+  place-items: center;
+  font-size: 4rem;
 }
-
 .dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 2rem 4rem;
-    background: #0f3f75;
-    color: white;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem 4rem;
+  background: #0f3f75;
+  color: white;
 }
-
 .dashboard-header > div:last-child {
-    display: grid;
-    gap: 0.5rem;
-    justify-items: end;
+  display: grid;
+  gap: 0.5rem;
+  justify-items: end;
 }
-
 .tabs {
-    display: flex;
-    gap: 0.5rem;
-    padding: 0.8rem 4rem;
-    background: white;
-    border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.8rem 4rem;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
 }
-
 .tabs button {
-    background: #e2e8f0;
-    color: #334155;
+  background: #e2e8f0;
+  color: #334155;
 }
-
 .tabs button.active {
-    background: #2563eb;
-    color: white;
+  background: #2563eb;
+  color: white;
 }
-
 .container {
-    max-width: 1150px;
-    margin: 0 auto;
-    padding: 1.2rem;
-    display: grid;
-    gap: 1rem;
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 1.2rem;
+  display: grid;
+  gap: 1rem;
 }
-
 .grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
-
 .card {
-    display: grid;
-    gap: 0.8rem;
+  display: grid;
+  gap: 0.8rem;
 }
-
 .card label {
-    display: grid;
-    gap: 0.35rem;
+  display: grid;
+  gap: 0.35rem;
 }
-
 .card ul {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
 }
-
 .card li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.7rem;
-    padding: 0.6rem;
-    background: #f8fafc;
-    border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  padding: 0.6rem;
+  background: #f8fafc;
+  border-radius: 10px;
 }
-
 .table-shell {
-    overflow-x: auto;
+  overflow-x: auto;
 }
-
 table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
-
 th,
 td {
-    padding: 0.7rem;
-    border-bottom: 1px solid #e2e8f0;
-    text-align: left;
+  padding: 0.7rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
 }
-
 .danger {
-    background: #b91c1c;
+  background: #b91c1c;
 }
-
 .success,
 .error {
-    padding: 0.7rem 1rem;
-    border-radius: 12px;
-    font-weight: 700;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  font-weight: 700;
 }
-
 .success {
-    background: #dcfce7;
-    color: #166534;
+  background: #dcfce7;
+  color: #166534;
 }
-
 .error {
-    background: #fee2e2;
-    color: #991b1b;
+  background: #fee2e2;
+  color: #991b1b;
+}
+@media (max-width: 850px) {
+  .landing-page {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+  .parking-puzzle {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .dashboard-header {
+    padding: 1.5rem;
+    flex-direction: column;
+  }
+  .dashboard-header > div:last-child {
+    justify-items: start;
+  }
+  .tabs {
+    padding: 0.8rem;
+  }
 }
 
-@media (max-width: 850px) {
-    .landing-page {
-        grid-template-columns: 1fr;
-        padding: 1.5rem;
-    }
-
-    .parking-puzzle {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .dashboard-header {
-        padding: 1.5rem;
-        flex-direction: column;
-    }
-
-    .dashboard-header > div:last-child {
-        justify-items: start;
-    }
-
-    .tabs {
-        padding: 0.8rem;
-    }
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.8rem;
+}
+.parking-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+  gap: 0.7rem;
+}
+.spot {
+  min-height: 92px;
+  display: grid;
+  place-items: center;
+  gap: 0.25rem;
+  border-radius: 14px;
+  color: #0f172a;
+}
+.spot strong {
+  font-size: 1.5rem;
+}
+.spot.free {
+  background: #bbf7d0;
+}
+.spot.busy {
+  background: #fecaca;
+}
+.spot:disabled {
+  opacity: 0.8;
 }
