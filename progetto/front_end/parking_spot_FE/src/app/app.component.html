@@ -1,104 +1,489 @@
 <section class="landing-page" *ngIf="!keycloak.isLoggedIn(); else dashboard">
-  <div>
+  <div class="landing-copy">
     <p class="eyebrow">Smart parking booking</p>
     <h1>Parking Spot</h1>
-    <p>Prenota il tuo posto auto.</p>
-    <div class="actions">
-      <button (click)="login()">Login</button
-      ><button class="outline" (click)="registrati()">Registrazione</button>
+    <p class="landing-subtitle">Prenota il tuo posto auto.</p>
+
+    <div class="auth-actions">
+      <button class="primary-action" (click)="login()">Login</button>
+      <button class="outline-action" (click)="registrati()">
+        Registrazione
+      </button>
     </div>
   </div>
-  <div class="parking-puzzle">
-    <span>16</span><span>06</span><span>68</span><span>88</span
-    ><button (click)="login()">🚗</button><span>98</span>
+
+  <div class="hero-visual" aria-label="Accesso al sistema Parking Spot">
+    <div class="hero-parking-card">
+      <div class="hero-spaces">
+        <div class="hero-slot"><span>16</span></div>
+        <div class="hero-slot"><span>06</span></div>
+        <div class="hero-slot"><span>68</span></div>
+        <div class="hero-slot"><span>88</span></div>
+        <button
+          class="hero-slot hero-car-slot"
+          (click)="login()"
+          aria-label="Accedi a Parking Spot"
+        >
+          <svg
+            class="hero-car-svg"
+            viewBox="0 0 280 430"
+            role="img"
+            aria-label="macchina stilizzata vista dall'alto"
+          >
+            <defs>
+              <linearGradient id="pandaBody" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="42%" stop-color="#f1f5f9" />
+                <stop offset="100%" stop-color="#cbd5e1" />
+              </linearGradient>
+              <linearGradient id="pandaGlass" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#e0f2fe" />
+                <stop offset="55%" stop-color="#60a5fa" />
+                <stop offset="100%" stop-color="#0f172a" />
+              </linearGradient>
+              <linearGradient id="pandaBlack" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#020617" />
+                <stop offset="50%" stop-color="#334155" />
+                <stop offset="100%" stop-color="#020617" />
+              </linearGradient>
+              <filter
+                id="pandaShadow"
+                x="-30%"
+                y="-30%"
+                width="170%"
+                height="170%"
+              >
+                <feDropShadow
+                  dx="0"
+                  dy="18"
+                  stdDeviation="13"
+                  flood-color="#020617"
+                  flood-opacity="0.36"
+                />
+              </filter>
+            </defs>
+
+            <ellipse
+              cx="140"
+              cy="385"
+              rx="88"
+              ry="21"
+              fill="#020617"
+              opacity="0.30"
+            />
+            <g filter="url(#pandaShadow)">
+              <rect
+                x="47"
+                y="86"
+                width="24"
+                height="88"
+                rx="12"
+                fill="url(#pandaBlack)"
+              />
+              <rect
+                x="209"
+                y="86"
+                width="24"
+                height="88"
+                rx="12"
+                fill="url(#pandaBlack)"
+              />
+              <rect
+                x="47"
+                y="250"
+                width="24"
+                height="88"
+                rx="12"
+                fill="url(#pandaBlack)"
+              />
+              <rect
+                x="209"
+                y="250"
+                width="24"
+                height="88"
+                rx="12"
+                fill="url(#pandaBlack)"
+              />
+
+              <path
+                d="M91 28h98c19 0 35 15 37 34l17 160-18 138c-3 22-21 38-43 38H98c-22 0-40-16-43-38L37 222 54 62c2-19 18-34 37-34z"
+                fill="url(#pandaBody)"
+                stroke="#64748b"
+                stroke-width="4"
+              />
+              <path
+                d="M79 48h122c9 0 17 7 18 16l6 55H55l6-55c1-9 9-16 18-16z"
+                fill="#f8fafc"
+                stroke="rgba(15,23,42,.16)"
+                stroke-width="3"
+              />
+              <path
+                d="M63 302h154l-5 44c-2 17-16 30-33 30H101c-17 0-31-13-33-30l-5-44z"
+                fill="#e2e8f0"
+                stroke="rgba(15,23,42,.15)"
+                stroke-width="3"
+              />
+
+              <path
+                d="M82 82c4-12 16-20 30-20h56c14 0 26 8 30 20l13 43c3 9-4 18-13 18H82c-9 0-16-9-13-18l13-43z"
+                fill="url(#pandaGlass)"
+                stroke="rgba(15,23,42,.25)"
+                stroke-width="4"
+              />
+              <rect
+                x="78"
+                y="160"
+                width="124"
+                height="108"
+                rx="17"
+                fill="rgba(255,255,255,.55)"
+                stroke="rgba(15,23,42,.18)"
+                stroke-width="4"
+              />
+              <rect
+                x="91"
+                y="174"
+                width="98"
+                height="80"
+                rx="12"
+                fill="rgba(226,232,240,.55)"
+              />
+              <path
+                d="M94 288h92c9 0 16 9 13 18l-10 33c-5 14-19 23-36 23h-26c-17 0-31-9-36-23l-10-33c-3-9 4-18 13-18z"
+                fill="url(#pandaGlass)"
+                stroke="rgba(15,23,42,.25)"
+                stroke-width="4"
+              />
+
+              <rect
+                x="64"
+                y="137"
+                width="15"
+                height="132"
+                rx="7"
+                fill="#111827"
+                opacity=".82"
+              />
+              <rect
+                x="201"
+                y="137"
+                width="15"
+                height="132"
+                rx="7"
+                fill="#111827"
+                opacity=".82"
+              />
+              <rect
+                x="111"
+                y="151"
+                width="58"
+                height="12"
+                rx="6"
+                fill="#111827"
+                opacity=".72"
+              />
+              <rect
+                x="107"
+                y="265"
+                width="66"
+                height="12"
+                rx="6"
+                fill="#111827"
+                opacity=".72"
+              />
+              <rect
+                x="118"
+                y="34"
+                width="44"
+                height="10"
+                rx="5"
+                fill="#94a3b8"
+                opacity=".9"
+              />
+
+              <path
+                d="M73 52h134"
+                stroke="rgba(255,255,255,.85)"
+                stroke-width="5"
+                stroke-linecap="round"
+              />
+              <rect
+                x="82"
+                y="386"
+                width="116"
+                height="18"
+                rx="9"
+                fill="#111827"
+              />
+              <rect
+                x="75"
+                y="52"
+                width="29"
+                height="13"
+                rx="6"
+                fill="#fef3c7"
+              />
+              <rect
+                x="176"
+                y="52"
+                width="29"
+                height="13"
+                rx="6"
+                fill="#fef3c7"
+              />
+              <rect
+                x="87"
+                y="363"
+                width="26"
+                height="12"
+                rx="6"
+                fill="#ef4444"
+              />
+              <rect
+                x="167"
+                y="363"
+                width="26"
+                height="12"
+                rx="6"
+                fill="#ef4444"
+              />
+            </g>
+          </svg>
+        </button>
+        <div class="hero-slot"><span>98</span></div>
+      </div>
+    </div>
   </div>
 </section>
-<ng-template #dashboard
-  ><header class="dashboard-header">
+
+<ng-template #dashboard>
+  <header class="dashboard-hero">
     <div>
+      <p class="eyebrow light">Dashboard</p>
       <h1>Parking Spot</h1>
       <p>{{ keycloak.username() }}</p>
     </div>
-    <div>
-      <span>{{ keycloak.email() }}</span
-      ><button (click)="logout()">Logout</button>
+
+    <div class="auth-box">
+      <span>{{ keycloak.email() }}</span>
+      <button class="secondary" (click)="logout()">Logout</button>
     </div>
   </header>
-  <nav class="tabs">
+
+  <nav class="dashboard-tabs" aria-label="Sezioni dashboard">
     <button
       [class.active]="sezioneAttiva === 'prenotazioni'"
       (click)="cambiaSezione('prenotazioni')"
     >
-      Prenotazioni e posti</button
-    ><button
+      Prenotazioni e mappa
+    </button>
+    <button
       [class.active]="sezioneAttiva === 'profilo'"
       (click)="cambiaSezione('profilo')"
     >
       Profilo e veicoli
     </button>
   </nav>
+
   <main class="container">
     <p class="success" *ngIf="messaggio">{{ messaggio }}</p>
     <p class="error" *ngIf="errore">{{ errore }}</p>
-    <ng-container *ngIf="sezioneAttiva === 'prenotazioni'"
-      ><section class="card">
-        <h2>Scegli la fascia oraria</h2>
+
+    <ng-container *ngIf="sezioneAttiva === 'prenotazioni'">
+      <section class="card booking-panel">
+        <div>
+          <p class="eyebrow">Fascia oraria</p>
+          <h2>Scegli quando parcheggiare</h2>
+        </div>
+
         <div class="form-row">
           <label
-            >Data<input
+            >Data
+            <input
               type="date"
               [(ngModel)]="slotForm.data"
-              (change)="aggiornaFascia()" /></label
-          ><label
-            >Ora<select
+              (change)="aggiornaFascia()"
+            />
+          </label>
+          <label
+            >Ora inizio
+            <select
               [(ngModel)]="slotForm.oraInizio"
               (change)="aggiornaFascia()"
             >
-              <option *ngFor="let o of orariDisponibili" [ngValue]="o">
-                {{ o }}
+              <option *ngFor="let ora of orariDisponibili" [ngValue]="ora">
+                {{ ora }}
               </option>
-            </select></label
-          ><label
-            >Durata<select
+            </select>
+          </label>
+          <label
+            >Durata
+            <select
               [(ngModel)]="slotForm.durataOre"
               (change)="aggiornaFascia()"
             >
-              <option *ngFor="let d of durateDisponibili" [ngValue]="d">
-                {{ d }} {{ d === 1 ? "ora" : "ore" }}
+              <option
+                *ngFor="let durata of durateDisponibili"
+                [ngValue]="durata"
+              >
+                {{ durata }} {{ durata === 1 ? "ora" : "ore" }}
               </option>
-            </select></label
-          ><label
-            >Veicolo<select [(ngModel)]="prenotazioneForm.veicoloId">
-              <option [ngValue]="0">Seleziona</option>
+            </select>
+          </label>
+          <label
+            >Veicolo
+            <select [(ngModel)]="prenotazioneForm.veicoloId">
+              <option [ngValue]="0">Seleziona veicolo</option>
               <option *ngFor="let v of veicoli" [ngValue]="v.id">
                 {{ v.targa }} - {{ v.marca }} {{ v.modello }}
               </option>
-            </select></label
-          >
+            </select>
+          </label>
         </div>
+
         <button
+          class="primary-action"
           [disabled]="caricamentoDisponibilita"
           (click)="mostraDisponibilita()"
         >
           {{ caricamentoDisponibilita ? "Caricamento..." : "Mostra posti" }}
         </button>
       </section>
-      <section class="card" *ngIf="fasciaCaricata">
-        <h2>Posti disponibili · {{ riepilogoFascia }}</h2>
-        <div class="parking-grid">
-          <button
-            class="spot"
-            *ngFor="let p of parcheggiOrdinati"
-            [class.free]="p.disponibile"
-            [class.busy]="!p.disponibile"
-            [disabled]="!p.disponibile"
-            (click)="prenota(p)"
-          >
-            <strong>{{ p.numero }}</strong
-            ><span>{{ p.disponibile ? "Libero" : "Occupato" }}</span>
-          </button>
+
+      <section
+        class="parking-section planimetry-section"
+        *ngIf="fasciaCaricata; else mappaVuota"
+      >
+        <div class="section-heading map-heading">
+          <div>
+            <p class="eyebrow">Mappa 2D</p>
+            <h2>{{ riepilogoFascia }}</h2>
+          </div>
+
+          <div class="zone-filter">
+            <button
+              class="chip-button"
+              [class.active]="vistaZona === 'tutte'"
+              (click)="impostaVistaZona('tutte')"
+            >
+              Tutte
+            </button>
+            <button
+              class="chip-button"
+              [class.active]="vistaZona === 'A'"
+              (click)="impostaVistaZona('A')"
+              title="Zoom su Zona A"
+            >
+              Zona A
+            </button>
+            <button
+              class="chip-button"
+              [class.active]="vistaZona === 'B'"
+              (click)="impostaVistaZona('B')"
+              title="Zoom su Zona B"
+            >
+              Zona B
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="parking-plan"
+          [class.only-a]="vistaZona === 'A'"
+          [class.only-b]="vistaZona === 'B'"
+        >
+          <div class="plan-stage">
+            <div class="green-belt belt-a"></div>
+            <div class="green-belt belt-b"></div>
+
+            <div class="road horizontal-road left-road"></div>
+            <div class="road horizontal-road right-road"></div>
+            <div class="road central-road">
+              <span class="road-line"></span>
+            </div>
+
+            <div class="lot asphalt-a"></div>
+            <div class="lot asphalt-b"></div>
+
+            <div class="internal-island island-a-one"></div>
+            <div class="internal-island island-a-two"></div>
+            <div class="internal-island island-a-three"></div>
+            <div class="internal-island island-b-one"></div>
+            <div class="internal-island island-b-two"></div>
+            <div class="internal-island island-b-three"></div>
+
+            <div class="roundabout">
+              <span></span>
+            </div>
+
+            <span class="zone-label label-a-top">ZONA A</span>
+            <span class="zone-label label-a-bottom">ZONA A</span>
+            <span class="zone-label label-b-top">ZONA B</span>
+            <span class="zone-label label-b-bottom">ZONA B</span>
+            <span class="gate-label">INGRESSO</span>
+
+            <span class="direction-arrow arrow-top-left">↓</span>
+            <span class="direction-arrow arrow-top-right">↑</span>
+            <span class="direction-arrow arrow-a-left">↓</span>
+            <span class="direction-arrow arrow-a-middle">↑</span>
+            <span class="direction-arrow arrow-a-right">↑</span>
+            <span class="direction-arrow arrow-a-top">←</span>
+            <span class="direction-arrow arrow-a-bottom">→</span>
+            <span class="direction-arrow arrow-b-left">↑</span>
+            <span class="direction-arrow arrow-b-middle">↑</span>
+            <span class="direction-arrow arrow-b-right">↓</span>
+            <span class="direction-arrow arrow-b-top">→</span>
+            <span class="direction-arrow arrow-b-bottom">←</span>
+            <span class="direction-arrow arrow-entry-down">↓</span>
+            <span class="direction-arrow arrow-entry-up">↑</span>
+
+            <div class="plan-legend" aria-label="Legenda">
+              <span><i class="legend-swatch free"></i>Libero</span>
+              <span><i class="legend-swatch busy"></i>Occupato</span>
+              <span><i class="legend-swatch disabled"></i>Disabili</span>
+              <span><i class="legend-swatch loading"></i>Scarico merci</span>
+            </div>
+
+            <button
+              class="map-spot"
+              *ngFor="let p of postiPlanimetria; trackBy: trackByNumero"
+              [ngStyle]="spotPlanimetriaStyle(p)"
+              [ngClass]="{
+                available:
+                  p.disponibile && p.prenotabile && p.tipo === 'standard',
+                occupied: !p.disponibile && p.prenotabile,
+                'disabled-space': p.tipo === 'disabili' && p.disponibile,
+                'loading-space': p.tipo === 'scarico merci',
+              }"
+              [disabled]="
+                !p.prenotabile ||
+                !p.disponibile ||
+                !profilo ||
+                !prenotazioneForm.veicoloId
+              "
+              (click)="prenota(p)"
+              [title]="p.titolo + ' ' + p.numero"
+            >
+              <span class="spot-icon" *ngIf="p.tipo === 'disabili'">♿</span>
+              <span class="spot-label" *ngIf="p.tipo === 'scarico merci'"
+                >MERCI</span
+              >
+              <span class="spot-number">{{ p.numero }}</span>
+            </button>
+          </div>
         </div>
       </section>
+
+      <ng-template #mappaVuota>
+        <section class="card empty-map">
+          <h2>Mappa parcheggi</h2>
+          <p>
+            Seleziona data, ora, durata e veicolo per visualizzare la
+            disponibilità delle due zone.
+          </p>
+        </section>
+      </ng-template>
+
       <section class="card">
         <h2>Le mie prenotazioni</h2>
         <p *ngIf="!prenotazioni.length">Nessuna prenotazione.</p>
@@ -128,39 +513,73 @@
             </tbody>
           </table>
         </div>
-      </section></ng-container
-    >
-    <ng-container *ngIf="sezioneAttiva === 'profilo'"
-      ><section class="grid">
+      </section>
+    </ng-container>
+
+    <ng-container *ngIf="sezioneAttiva === 'profilo'">
+      <section class="grid two">
         <div class="card">
           <h2>Profilo</h2>
           <label
-            >Codice fiscale<input
+            >Codice fiscale
+            <input
               [(ngModel)]="profiloForm.codiceFiscale"
-              maxlength="16" /></label
-          ><label>Nome<input [(ngModel)]="profiloForm.nome" /></label
-          ><label>Cognome<input [(ngModel)]="profiloForm.cognome" /></label
-          ><button (click)="salvaProfilo()">Salva profilo</button>
+              maxlength="16"
+              autocomplete="off"
+            />
+          </label>
+          <label
+            >Nome
+            <input [(ngModel)]="profiloForm.nome" autocomplete="given-name" />
+          </label>
+          <label
+            >Cognome
+            <input
+              [(ngModel)]="profiloForm.cognome"
+              autocomplete="family-name"
+            />
+          </label>
+          <button class="primary-action" (click)="salvaProfilo()">
+            Salva profilo
+          </button>
         </div>
+
         <div class="card">
           <h2>Veicoli</h2>
           <label
-            >Targa<input [(ngModel)]="veicoloForm.targa" maxlength="7" /></label
-          ><label>Marca<input [(ngModel)]="veicoloForm.marca" /></label
-          ><label>Modello<input [(ngModel)]="veicoloForm.modello" /></label
-          ><button [disabled]="!profilo" (click)="creaVeicolo()">
+            >Targa
+            <input
+              [(ngModel)]="veicoloForm.targa"
+              maxlength="7"
+              autocomplete="off"
+            />
+          </label>
+          <label
+            >Marca
+            <input [(ngModel)]="veicoloForm.marca" autocomplete="off" />
+          </label>
+          <label
+            >Modello
+            <input [(ngModel)]="veicoloForm.modello" autocomplete="off" />
+          </label>
+          <button
+            class="primary-action"
+            [disabled]="!profilo"
+            (click)="creaVeicolo()"
+          >
             Aggiungi veicolo
           </button>
-          <ul>
+
+          <ul class="vehicle-list">
             <li *ngFor="let v of veicoli">
-              <span>{{ v.targa }} - {{ v.marca }} {{ v.modello }}</span
-              ><button class="danger" (click)="cancellaVeicolo(v.id)">
+              <span>{{ v.targa }} - {{ v.marca }} {{ v.modello }}</span>
+              <button class="danger small" (click)="cancellaVeicolo(v.id)">
                 Elimina
               </button>
             </li>
           </ul>
         </div>
-      </section></ng-container
-    >
-  </main></ng-template
->
+      </section>
+    </ng-container>
+  </main>
+</ng-template>
