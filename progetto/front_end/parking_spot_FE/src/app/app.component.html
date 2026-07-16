@@ -28,7 +28,7 @@
             class="hero-car-svg"
             viewBox="0 0 280 430"
             role="img"
-            aria-label="macchina stilizzata vista dall'alto"
+            aria-label="macchina stilizzata"
           >
             <defs>
               <linearGradient id="pandaBody" x1="0" y1="0" x2="1" y2="1">
@@ -301,6 +301,7 @@
             >Data
             <input
               type="date"
+              [min]="dataMinima"
               [(ngModel)]="slotForm.data"
               (change)="aggiornaFascia()"
             />
@@ -539,7 +540,11 @@
               autocomplete="family-name"
             />
           </label>
-          <button class="primary-action" (click)="salvaProfilo()">
+          <button
+            class="primary-action"
+            [disabled]="!profiloFormValido"
+            (click)="salvaProfilo()"
+          >
             Salva profilo
           </button>
         </div>
@@ -564,7 +569,7 @@
           </label>
           <button
             class="primary-action"
-            [disabled]="!profilo"
+            [disabled]="!profilo || !veicoloFormValido"
             (click)="creaVeicolo()"
           >
             Aggiungi veicolo

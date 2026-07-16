@@ -18,16 +18,6 @@ interface PostoMappa extends Parcheggio {
   icona: string;
 }
 
-interface ZoneLayout {
-  entrance: PostoMappa[];
-  top: PostoMappa[];
-  right: PostoMappa[];
-  bottom: PostoMappa[];
-  left: PostoMappa[];
-  centerTop: PostoMappa[];
-  centerBottom: PostoMappa[];
-}
-
 interface PosizionePlanimetria {
   left: number;
   top: number;
@@ -116,22 +106,6 @@ export class AppComponent implements OnInit {
     return this.postiMappa.filter((p) => p.zona === "B");
   }
 
-  get postiStandardZonaA(): PostoMappa[] {
-    return this.postiZonaA.filter((p) => p.tipo === "standard");
-  }
-
-  get postiStandardZonaB(): PostoMappa[] {
-    return this.postiZonaB.filter((p) => p.tipo === "standard");
-  }
-
-  get postiRiservatiZonaA(): PostoMappa[] {
-    return this.postiZonaA.filter((p) => p.tipo !== "standard");
-  }
-
-  get postiRiservatiZonaB(): PostoMappa[] {
-    return this.postiZonaB.filter((p) => p.tipo !== "standard");
-  }
-
   get postiPlanimetria(): PostoPlanimetria[] {
     return this.postiMappa
       .map((posto) => ({
@@ -139,14 +113,6 @@ export class AppComponent implements OnInit {
         ...this.getPosizionePlanimetria(posto.numero),
       }))
       .filter((posto) => this.postoVisibile(posto));
-  }
-
-  get zoneALayout(): ZoneLayout {
-    return this.buildZoneLayout(this.postiZonaA);
-  }
-
-  get zoneBLayout(): ZoneLayout {
-    return this.buildZoneLayout(this.postiZonaB);
   }
 
   get orarioInizioSelezionato(): string {
@@ -161,6 +127,26 @@ export class AppComponent implements OnInit {
 
   get riepilogoFascia(): string {
     return `${this.slotForm.data} · ${this.slotForm.oraInizio} - ${this.orarioFineSelezionato.slice(11, 16)}`;
+  }
+
+  get dataMinima(): string {
+    return this.formatDateOnly(new Date());
+  }
+
+  get profiloFormValido(): boolean {
+    return (
+      /^[A-Z0-9]{16}$/i.test(this.profiloForm.codiceFiscale.trim()) &&
+      !!this.profiloForm.nome.trim() &&
+      !!this.profiloForm.cognome.trim()
+    );
+  }
+
+  get veicoloFormValido(): boolean {
+    return (
+      /^[A-Z]{2}[0-9]{3}[A-Z]{2}$/i.test(this.veicoloForm.targa.trim()) &&
+      !!this.veicoloForm.marca.trim() &&
+      !!this.veicoloForm.modello.trim()
+    );
   }
 
   login(): void {
@@ -183,14 +169,6 @@ export class AppComponent implements OnInit {
 
   impostaVistaZona(vista: VistaZona): void {
     this.vistaZona = vista;
-  }
-
-  toggleZoomZona(zona: ZonaParcheggio): void {
-    this.vistaZona = this.vistaZona === zona ? "tutte" : zona;
-  }
-
-  mostraZona(zona: ZonaParcheggio): boolean {
-    return this.vistaZona === "tutte" || this.vistaZona === zona;
   }
 
   conteggioLiberi(zona: ZonaParcheggio): number {
@@ -223,16 +201,22 @@ export class AppComponent implements OnInit {
   }
 
   salvaProfilo(): void {
-    this.api.salvaProfilo(this.profiloForm).subscribe({
-      next: (profilo) => {
-        this.profilo = profilo;
-        this.messaggio = "Profilo salvato.";
-        this.errore = "";
-        this.caricaVeicoli();
-        this.caricaPrenotazioni();
-      },
-      error: (err) => this.mostraErrore(err),
-    });
+    this.api
+      .salvaProfilo({
+        codiceFiscale: this.profiloForm.codiceFiscale.toUpperCase().trim(),
+        nome: this.profiloForm.nome.trim(),
+        cognome: this.profiloForm.cognome.trim(),
+      })
+      .subscribe({
+        next: (profilo) => {
+          this.profilo = profilo;
+          this.messaggio = "Profilo salvato.";
+          this.errore = "";
+          this.caricaVeicoli();
+          this.caricaPrenotazioni();
+        },
+        error: (err) => this.mostraErrore(err),
+      });
   }
 
   caricaVeicoli(): void {
@@ -284,6 +268,17 @@ export class AppComponent implements OnInit {
   }
 
   mostraDisponibilita(): void {
+    if (!this.slotForm.data || !this.slotForm.oraInizio) {
+      this.errore = "Seleziona una data e un orario validi.";
+      return;
+    }
+
+    if (this.parseLocalDateTime(this.orarioInizioSelezionato) < new Date()) {
+      this.errore =
+        "Non puoi cercare disponibilità per una fascia già trascorsa.";
+      return;
+    }
+
     this.caricamentoDisponibilita = true;
     this.api
       .getDisponibilitaParcheggi(
@@ -375,26 +370,6 @@ export class AppComponent implements OnInit {
     return posto.numero;
   }
 
-  statoPosto(posto: PostoMappa): string {
-    if (posto.tipo === "scarico merci") {
-      return "Area tecnica";
-    }
-
-    return posto.disponibile ? "Libero" : "Occupato";
-  }
-
-  siglaTipoPosto(posto: PostoMappa): string {
-    if (posto.tipo === "disabili") {
-      return "DISABILI";
-    }
-
-    if (posto.tipo === "scarico merci") {
-      return "MERCI";
-    }
-
-    return "STANDARD";
-  }
-
   spotPlanimetriaStyle(posto: PostoPlanimetria): Record<string, string> {
     return {
       left: `${posto.left}%`,
@@ -437,7 +412,7 @@ export class AppComponent implements OnInit {
       }
     };
 
-    //Zona A e Zona B ho cercatp di farle simmetriche rispetto alla strada
+    //Zona A e Zona B ho cercato di farle simmetriche rispetto alla strada
 
     // Zona A: fascia superiore con scarico merci e posti disabili.
     add(1, 10.1, 25.8, 7.0, 6.5);
@@ -502,28 +477,13 @@ export class AppComponent implements OnInit {
     return "standard";
   }
 
-  private buildZoneLayout(items: PostoMappa[]): ZoneLayout {
-    const entrance = items.slice(0, 5);
-    const top = items.slice(5, 15);
-    const right = items.slice(15, 20);
-    const bottom = items.slice(20, 30);
-    const left = items.slice(30, 35);
-    const center = items.slice(35);
-    const middle = Math.ceil(center.length / 2);
-
-    return {
-      entrance,
-      top,
-      right,
-      bottom,
-      left,
-      centerTop: center.slice(0, middle),
-      centerBottom: center.slice(middle),
+  private mostraErrore(err: unknown): void {
+    const erroreHttp = err as {
+      error?: { message?: string };
+      message?: string;
     };
-  }
-
-  private mostraErrore(err: any): void {
-    this.errore = err?.error?.message || err?.message || "Errore imprevisto";
+    this.errore =
+      erroreHttp.error?.message || erroreHttp.message || "Errore imprevisto";
     this.messaggio = "";
   }
 
