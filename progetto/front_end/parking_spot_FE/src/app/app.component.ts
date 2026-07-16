@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { CommonModule,DatePipe } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { KeycloakService } from "./keycloak.service";
 import { ParkingApiService } from "./parking-api.service";
@@ -31,7 +31,7 @@ interface PostoPlanimetria extends PostoMappa, PosizionePlanimetria {}
 @Component({
   selector: "app-root",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,DatePipe],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.css",
 })
