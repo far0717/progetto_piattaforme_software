@@ -59,9 +59,9 @@
 
 \section{Introduzione e contesto dell'applicazione}
 
-Parking Spot è un'applicazione web per la gestione e la prenotazione di posti auto. Il sistema rappresenta un parcheggio composto da 87 posti, suddivisi nelle zone A e B, e permette di visualizzarne la disponibilità in una determinata fascia oraria attraverso una mappa 2D. L'utente deve registrarsi; successivamente può autenticarsi, completare il proprio profilo, associare uno o più veicoli e prenotare i posti disponibili nella fascia oraria che preferisce.
+Parking Spot è un'applicazione web per la gestione e la prenotazione di posti auto. Il sistema rappresenta un parcheggio composto da 87 posti, suddivisi nelle zone A e B, e permette di visualizzarne la disponibilità in una determinata fascia oraria attraverso una mappa 2D. L'utente deve registrarsi, successivamente può autenticarsi, completare il proprio profilo, associare uno o più veicoli e prenotare i posti disponibili nella fascia oraria che preferisce.
 
-L'applicazione distingue le funzionalità dell'utente da quelle amministrative. L'utente può consultare, creare e cancellare esclusivamente le proprie prenotazioni, mentre l'amministratore può gestire i posti auto e consultare l'insieme delle prenotazioni. L'autenticazione è delegata a Keycloak, mentre il back-end verifica il token JWT e applica i controlli di autorizzazione previsti per i ruoli \texttt{USER} e \texttt{ADMIN}.
+L'applicazione distingue, a livello di back-end, le funzionalità dell'utente da quelle amministrative. L'utente può consultare, creare e cancellare esclusivamente le proprie prenotazioni. L'amministratore, tramite endpoint REST protetti, può gestire i posti auto, consultare tutti gli utenti e visualizzare l'insieme delle prenotazioni. Nell'attuale front-end non è però presente una sezione amministrativa dedicata: tali operazioni sono quindi disponibili nelle API, ma non sono esposte dall'interfaccia grafica. L'autenticazione è delegata a Keycloak, mentre il back-end verifica il token JWT e applica i controlli di autorizzazione previsti per i ruoli \texttt{USER} e \texttt{ADMIN}.
 
 \begin{figure}[H]
     \centering
@@ -71,24 +71,23 @@ L'applicazione distingue le funzionalità dell'utente da quelle amministrative. 
 
 \section{Analisi dei requisiti}
 
-I requisiti funzionali principali comprendono la registrazione e il login, la gestione del profilo utente, l'inserimento dei veicoli, la ricerca dei posti disponibili per data e fascia oraria, la creazione di una prenotazione e la sua cancellazione. Il profilo è collegato all'identificativo Keycloak; l'email, il codice fiscale e la targa sono soggetti a vincoli di unicità. Le prenotazioni possono avere una durata compresa tra una e dodici ore e non possono riferirsi a una fascia oraria già trascorsa.
+I requisiti funzionali principali comprendono la registrazione e il login, la gestione del profilo utente, l'inserimento dei veicoli, la ricerca dei posti disponibili per data e fascia oraria, la creazione di una prenotazione e la sua cancellazione. Il profilo è collegato all'identificativo Keycloak, l'email, il codice fiscale e la targa sono soggetti a vincoli di unicità. Le prenotazioni possono avere una durata compresa tra una e dodici ore e non possono riferirsi a una fascia oraria già trascorsa.
 
-Tra i requisiti non funzionali rientrano la sicurezza, la consistenza dei dati e la gestione della concorrenza. Il back-end è stateless e accetta token Bearer firmati dal realm Keycloak; le API amministrative sono protette mediante il controllo del ruolo. Le operazioni di prenotazione verificano la sovrapposizione temporale sia sul posto auto, sia sul veicolo. Il lock pessimistico sui record coinvolti e il campo di versione dell'entità \texttt{Parcheggio} riducono il rischio di prenotazioni concorrenti sullo stesso posto.
+Tra i requisiti non funzionali rientrano la sicurezza, la consistenza dei dati e la gestione della concorrenza. Il back-end è stateless e accetta Token Bearer firmati dal realm Keycloak, le API amministrative sono protette mediante il controllo del ruolo. Le operazioni di prenotazione verificano la sovrapposizione temporale sia sul posto auto, sia sul veicolo. Il lock pessimistico acquisito sui record del parcheggio e del veicolo, insieme ai controlli di sovrapposizione eseguiti nella stessa transazione, impedisce che due richieste concorrenti prenotino lo stesso posto o impieghino lo stesso veicolo nella medesima fascia oraria. L'entità \texttt{Parcheggio} contiene anche un campo \texttt{@Version}, utilizzato da JPA per il controllo ottimistico quando il record viene effettivamente aggiornato, la creazione di una prenotazione, tuttavia, non modifica tale record e si basa principalmente sui lock pessimistici e sulle query di sovrapposizione.
 
-\clearpage
 \section{Back-end e tecnologie impiegate}
 
 Il back-end è sviluppato in Java 17 con Spring Boot e utilizza Spring Web MVC per le API REST, Spring Data JPA per la persistenza, Spring Validation per il controllo dei dati e Spring Security OAuth2 Resource Server per la validazione dei JWT. Il database PostgreSQL conserva utenti, veicoli, parcheggi e prenotazioni. PostgreSQL e Keycloak vengono avviati mediante Docker Compose, mentre Hibernate aggiorna lo schema a partire dalle entità JPA.
 
 L'applicazione adotta un'architettura a livelli. 
 
-I controller ricevono le richieste HTTP e delegano l'elaborazione ai servizi. 
+I Controller ricevono le richieste HTTP e delegano l'elaborazione ai servizi. 
 
-I service contengono la logica applicativa e delimitano le transazioni. 
+I Service contengono la logica applicativa e delimitano le transazioni. 
 
-I repository incapsulano l'accesso ai dati. 
+I Repository incapsulano l'accesso ai dati. 
 
-Le entità principali sono \texttt{Utente}, \texttt{Veicolo}, \texttt{Parcheggio} e \texttt{Prenotazione}. Ogni prenotazione collega un utente, un veicolo e un posto auto.
+Le Entity principali sono \texttt{Utente}, \texttt{Veicolo}, \texttt{Parcheggio} e \texttt{Prenotazione}. Ogni prenotazione collega un utente, un veicolo e un posto auto.
 
 Sono inoltre utilizzati DTO di richiesta e risposta, che separano il modello persistente dai dati scambiati con il client.
 
@@ -175,7 +174,7 @@ Data Transfer Object & I DTO di richiesta e risposta trasferiscono i dati tra cl
 
 Le dipendenze tra Controller, Service e Repository sono gestite da Spring mediante la \textbf{Dependency Injection} tramite costruttore. In questo modo, ogni componente riceve dall’esterno le risorse necessarie al proprio funzionamento, senza doverle creare direttamente. Tale meccanismo riduce l’accoppiamento tra le classi e migliora la modularità, la manutenibilità e la testabilità del codice.
 
-La creazione della prenotazione è l'operazione transazionale più delicata. Il service valida la fascia oraria, identifica l'utente dal JWT, acquisisce un lock pessimistico sul posto auto e sul veicolo e controlla eventuali sovrapposizioni. Solo al termine dei controlli viene salvata l'entità e viene effettuato il commit della transazione. In presenza di errori, l'operazione viene annullata e il client riceve uno stato HTTP coerente.
+La creazione della prenotazione è l'operazione transazionale più delicata. Il Service valida la fascia oraria, identifica l'utente dal JWT, acquisisce un lock pessimistico sul posto auto e sul veicolo e controlla eventuali sovrapposizioni. Solo al termine dei controlli viene salvata l'entità e viene effettuato il commit della transazione. In presenza di errori, l'operazione viene annullata e il client riceve uno stato HTTP coerente.
 
 \begin{figure}[H]
     \centering
@@ -191,13 +190,14 @@ La cancellazione della prenotazione è anch'essa racchiusa in una transazione. L
     \caption{Activity Diagram UML della cancellazione di una prenotazione.}
 \end{figure}
 
-La gestione degli errori è centralizzata tramite \texttt{@RestControllerAdvice}, che traduce eccezioni applicative, conflitti di integrità e problemi di concorrenza in risposte HTTP strutturate. La consistenza è inoltre garantita dai vincoli di unicità, dalle associazioni obbligatorie tra le entità e dalle query che rilevano le sovrapposizioni temporali; all'avvio, un inizializzatore completa i posti fino al numero 87 evitando duplicati.
+La gestione degli errori è centralizzata tramite \texttt{@RestControllerAdvice}, che traduce eccezioni applicative, conflitti di integrità e problemi di concorrenza in risposte HTTP strutturate. La consistenza è inoltre garantita dai vincoli di unicità, dalle associazioni obbligatorie tra le entità e dalle query che rilevano le sovrapposizioni temporali. 
+All'avvio è presente un inizializzatore che completa i posti fino al numero 87 evitando duplicati.
 
 \section{Front-end e tecnologie impiegate}
 
 Il front-end è realizzato con Angular mediante un componente standalone. L'interfaccia utilizza FormsModule per il binding dei moduli, HttpClient per le richieste REST e RxJS per la gestione asincrona delle risposte. La libreria \texttt{keycloak-js} avvia la sessione Single Sign-On, esegue login, registrazione e logout e rende disponibile il token da allegare alle richieste protette.
 
-La pagina iniziale presenta l'accesso e la registrazione. Dopo aver effettuato il login, viene mostrata una dashboard composta da due sezioni: ``Prenotazioni e mappa'' e ``Profilo e veicoli''. Nella prima l'utente sceglie data, ora, durata e veicolo, la risposta del back-end viene rappresentata sulla planimetria con colori diversi per posti liberi, occupati, riservati ai disabili e riservati allo scarico merci. Nella seconda sezione vengono gestiti i dati anagrafici e i veicoli associati al profilo.
+La pagina iniziale presenta l'accesso e la registrazione. Dopo aver effettuato il login, viene mostrata una dashboard composta da due sezioni: ``Prenotazioni e mappa'' e ``Profilo e veicoli''. Nella prima l'utente sceglie data, ora, durata e veicolo e la risposta del back-end viene rappresentata sulla planimetria con colori diversi per posti liberi, occupati e per le categorie grafiche ``disabili'' e ``scarico merci''. Nella seconda sezione vengono gestiti i dati anagrafici e i veicoli associati al profilo.
 
 \subsection{Pattern progettuali nel front-end}
 
@@ -212,7 +212,7 @@ Pattern & Applicazione nel progetto \\
 \midrule
 Singleton & \texttt{KeycloakService} e \texttt{ParkingApiService} sono dichiarati con \texttt{providedIn: 'root'}. L'injector principale di Angular mantiene quindi una sola istanza condivisa di ciascun servizio per tutta l'applicazione. \\
 Facade & \texttt{ParkingApiService} svolge un ruolo assimilabile a una Facade, poiché espone al componente un punto di accesso unitario alle operazioni su profilo, veicoli, parcheggi e prenotazioni, nascondendo URL, parametri e dettagli delle chiamate HTTP. Anche \texttt{KeycloakService} incapsula l'interazione con la libreria \texttt{keycloak-js}. \\
-Interceptor & L'\texttt{authInterceptor} intercetta le richieste HTTP dirette al back-end e aggiunge automaticamente l'header \texttt{Authorization} con il token Bearer, evitando di ripetere questa operazione in ogni chiamata. \\
+Interceptor & L'\texttt{authInterceptor} intercetta le richieste HTTP dirette al back-end e aggiunge automaticamente l'header \texttt{Authorization} con il Token Bearer, evitando di ripetere questa operazione in ogni chiamata. \\
 Observer & Le operazioni di \texttt{HttpClient} restituiscono \texttt{Observable}. Il componente si sottoscrive con \texttt{subscribe()} e reagisce alla ricezione dei dati o alla presenza di errori, secondo il meccanismo del pattern Observer. \\
 \bottomrule
 \end{tabularx}
@@ -233,7 +233,7 @@ Observer & Le operazioni di \texttt{HttpClient} restituiscono \texttt{Observable
     \caption{Principali schermate di autenticazione e gestione dei dati personali.}
 \end{figure}
 
-La mappa 2D è costruita a partire dai dati restituiti dall'endpoint di disponibilità. I posti vengono ordinati per numero e arricchiti sul client con zona, tipologia e posizione grafica. I pulsanti ``Zona A'' e ``Zona B'' permettono di concentrare la visualizzazione su una singola area, mentre la legenda rende immediata l'interpretazione dello stato di ogni posto. Il pulsante di prenotazione viene disabilitato quando il posto non è prenotabile, non è disponibile oppure mancano profilo o veicolo.
+La mappa 2D è costruita a partire dai dati restituiti dall'endpoint di disponibilità. I posti vengono ordinati per numero e arricchiti sul client con zona, tipologia e posizione grafica. Le tipologie ``disabili'' e ``scarico merci'' sono quindi informazioni definite esclusivamente nel front-end in base al numero del posto, non sono memorizzate nel database e non vengono validate dal back-end. Di conseguenza, i posti rappresentati come riservati ai disabili restano prenotabili come posti ordinari, mentre quelli mostrati come area di scarico merci vengono resi non prenotabili soltanto dall'interfaccia grafica. I pulsanti ``Zona A'' e ``Zona B'' permettono di concentrare la visualizzazione su una singola area, mentre la legenda rende immediata l'interpretazione dello stato di ogni posto. Il pulsante di prenotazione viene disabilitato quando il posto non è prenotabile, non è disponibile oppure mancano profilo o veicolo.
 
 \begin{figure}[H]
     \centering
@@ -245,6 +245,6 @@ La mappa 2D è costruita a partire dai dati restituiti dall'endpoint di disponib
 
 Parking Spot realizza un flusso completo di autenticazione, gestione dei dati personali e prenotazione temporale dei posti auto. La separazione tra Angular, API REST, Service, Repository, PostgreSQL e Keycloak rende il progetto modulare e facilita la manutenzione. I controlli di unicità, autorizzazione, sovrapposizione e concorrenza garantiscono una gestione coerente delle prenotazioni anche in presenza di richieste simultanee.
 
-Gli sviluppi successivi potrebbero riguardare l'uso di HTTPS, una sezione più ampia di test automatici, notifiche sulle prenotazioni e strumenti amministrativi dedicati nel front-end.
+Gli sviluppi successivi potrebbero riguardare l'uso di HTTPS, una sezione ampia di test automatici, notifiche sulle prenotazioni, strumenti amministrativi dedicati nel front-end.
 
 \end{document}

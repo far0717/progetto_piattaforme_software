@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.2.27)  17 JUL 2026 16:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.2.27)  17 JUL 2026 20:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -603,63 +603,62 @@ utente/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}
 (C:\Users\utente\AppData\Local\Programs\MiKTeX\tex/latex/lm\omllmm.fd)
 (C:\Users\utente\AppData\Local\Programs\MiKTeX\tex/latex/lm\omslmsy.fd)
 (C:\Users\utente\AppData\Local\Programs\MiKTeX\tex/latex/lm\omxlmex.fd)
-[2
-
-]
-<diagrammi/pdf_progetto/flow_creazione_prenotazione.pdf, id=79, 1450.6697pt x 1
+[2]
+<diagrammi/pdf_progetto/flow_creazione_prenotazione.pdf, id=76, 1450.6697pt x 1
 108.8928pt>
 File: diagrammi/pdf_progetto/flow_creazione_prenotazione.pdf Graphic file (type
  pdf)
 <use diagrammi/pdf_progetto/flow_creazione_prenotazione.pdf>
 Package pdftex.def Info: diagrammi/pdf_progetto/flow_creazione_prenotazione.pdf
-  used on input line 182.
+  used on input line 181.
 (pdftex.def)             Requested size: 306.9458pt x 234.61716pt.
-<diagrammi/pdf_progetto/flow_cancellazione_prenotazione.pdf, id=80, 572.1375pt 
+<diagrammi/pdf_progetto/flow_cancellazione_prenotazione.pdf, id=77, 572.1375pt 
 x 571.38469pt>
 File: diagrammi/pdf_progetto/flow_cancellazione_prenotazione.pdf Graphic file (
 type pdf)
 <use diagrammi/pdf_progetto/flow_cancellazione_prenotazione.pdf>
 Package pdftex.def Info: diagrammi/pdf_progetto/flow_cancellazione_prenotazione
-.pdf  used on input line 190.
+.pdf  used on input line 189.
 (pdftex.def)             Requested size: 188.13197pt x 187.88618pt.
- [3 <./diagrammi/pdf_progetto/flow_creazione_prenotazione.pdf> <./diagrammi/pdf
-_progetto/flow_cancellazione_prenotazione.pdf
-
-pdfTeX warning: pdflatex.exe (file ./diagrammi/pdf_progetto/flow_cancellazione_
-prenotazione.pdf): PDF inclusion: multiple pdfs with page group included in a s
-ingle page
->]
-<immagini/01_accesso.png, id=114, 1606.0pt x 1003.75pt>
+ [3 <./diagrammi/pdf_progetto/flow_creazione_prenotazione.pdf>]
+<immagini/01_accesso.png, id=100, 1606.0pt x 1003.75pt>
 File: immagini/01_accesso.png Graphic file (type png)
 <use immagini/01_accesso.png>
 Package pdftex.def Info: immagini/01_accesso.png  used on input line 225.
 (pdftex.def)             Requested size: 242.59084pt x 151.61281pt.
-<immagini/03_profilo.png, id=115, 1606.0pt x 1003.75pt>
+<immagini/03_profilo.png, id=101, 1606.0pt x 1003.75pt>
 File: immagini/03_profilo.png Graphic file (type png)
 <use immagini/03_profilo.png>
 Package pdftex.def Info: immagini/03_profilo.png  used on input line 230.
 (pdftex.def)             Requested size: 242.59084pt x 151.61281pt.
-<immagini/02_mappa.png, id=116, 1565.85pt x 1375.1375pt>
+ [4 <./diagrammi/pdf_progetto/flow_cancellazione_prenotazione.pdf>]
+<immagini/02_mappa.png, id=122, 1565.85pt x 1375.1375pt>
 File: immagini/02_mappa.png Graphic file (type png)
 <use immagini/02_mappa.png>
 Package pdftex.def Info: immagini/02_mappa.png  used on input line 240.
 (pdftex.def)             Requested size: 465.37433pt x 408.68358pt.
- [4 <./immagini/01_accesso.png (PNG copy)> <./immagini/03_profilo.png (PNG copy
-)>] [5 <./immagini/02_mappa.png (PNG copy)>] (Relazione_Parking_Spot.aux)
+ [5 <./immagini/01_accesso.png (PNG copy)> <./immagini/03_profilo.png (PNG copy
+)>] [6 <./immagini/02_mappa.png (PNG copy)>] (Relazione_Parking_Spot.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
-Package rerunfilecheck Info: File `Relazione_Parking_Spot.out' has not changed.
 
-(rerunfilecheck)             Checksum: 642387098D13DDB19CCD2D2077883BF6;1718.
+
+Package rerunfilecheck Warning: File `Relazione_Parking_Spot.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `Relazione_Parking_Spot.out':
+(rerunfilecheck)             Before: 4449062662BEBB5205CBB56C291C32D0;1726
+(rerunfilecheck)             After:  642387098D13DDB19CCD2D2077883BF6;1718.
  ) 
 Here is how much of TeX's memory you used:
- 15559 strings out of 467871
- 257883 string characters out of 5417892
+ 15564 strings out of 467871
+ 258151 string characters out of 5417892
  733870 words of memory out of 5000000
  44122 multiletter control sequences out of 15000+600000
- 684980 words of font info for 124 fonts, out of 8000000 for 9000
+ 685146 words of font info for 126 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,11n,79p,1021b,485s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/utente/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx10.p
@@ -673,9 +672,9 @@ b><C:/Users/utente/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.p
 fb><C:/Users/utente/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt8.p
 fb><C:/Users/utente/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt9.p
 fb>
-Output written on Relazione_Parking_Spot.pdf (5 pages, 1658494 bytes).
+Output written on Relazione_Parking_Spot.pdf (6 pages, 1660432 bytes).
 PDF statistics:
- 177 PDF objects out of 1000 (max. 8388607)
- 22 named destinations out of 1000 (max. 500000)
+ 182 PDF objects out of 1000 (max. 8388607)
+ 23 named destinations out of 1000 (max. 500000)
  34399 words of extra memory for PDF output out of 35830 (max. 10000000)
 
